@@ -10,6 +10,7 @@
   "author": "CLCG",
   "license": "ISC",
   "dependencies": {
+    "@openzeppelin/contracts": "^2.4.0",
     "chainlink": "^0.7.5",
     "truffle-hdwallet-provider": "^1.0.17"
   }
