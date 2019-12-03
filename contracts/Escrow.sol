@@ -1,7 +1,7 @@
 pragma solidity 0.4.24;
 
-import "@openzeppelin/contracts/math/SafeMath.sol";
-import "@openzeppelin/contracts/ownership/Ownable.sol";
+import "../node_modules/@openzeppelin/contracts/math/SafeMath.sol";
+import "../node_modules/@openzeppelin/contracts/ownership/Ownable.sol";
 
 /*
  * @title Escrow
