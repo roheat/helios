@@ -1,7 +1,7 @@
-pragma solidity >=0.5.0 <0.6.0;
+pragma solidity 0.4.24;
 
-import "../node_modules/@openzeppelin/contracts/math/SafeMath.sol";
-import "../node_modules/@openzeppelin/contracts/ownership/Ownable.sol";
+import "./Ownable.sol";
+import "./SafeMath.sol";
 
 /*
  * @title Escrow
@@ -12,12 +12,8 @@ contract Escrow is Ownable {
   using SafeMath for uint256;
   mapping(address => uint256) public escrowBalance;
 
-  constructor() payable public {
-    escrowBalance[msg.sender] = msg.value;
-  }
-
   /*
-   * @notice Returns deposit amount of an address
+   * @dev Returns deposit amount of an address
    * @param _payee the payee address
    */
   function depositsOf(address _payee) public view returns (uint256) {
@@ -25,7 +21,7 @@ contract Escrow is Ownable {
   }
 
   /*
-   * @notice Deposit amount into escrow
+   * @dev Deposit amount into escrow
    * @param _payer the payer address
    * @param _amount the amount deposited
    */
@@ -34,9 +30,9 @@ contract Escrow is Ownable {
   }
 
   /*
-   * @notice Withdraw amount from escrow
+   * @dev Withdraw amount from escrow
    */
-  function withdraw(address _payer, address payable _payee, uint256 _amount) public onlyOwner returns (bool) {
+  function withdraw(address _payer, address  _payee, uint256 _amount) public onlyOwner returns (bool) {
     require(_amount <= escrowBalance[_payer], "Insufficient funds");
     _payee.transfer(_amount);
     escrowBalance[_payer] = escrowBalance[_payer].sub(_amount);
