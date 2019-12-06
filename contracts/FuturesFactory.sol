@@ -92,7 +92,8 @@ contract FuturesFactory is Ownable {
     // Calculate HDD
     // if avgTemp < 18, HDD = 18 - avgTemp, else HDD = 0
     // if avgTemp > 18, CDD = avgTemp - 18, else CDD = 0
-    // Settlement price = HDD * 0.03 ETH or CDD * 0.03 ETH
+    // Settlement price = HDD * 0.003 ETH or CDD * 0.003 ETH
+    // 0.003 ETH = constant price multiplier per HDD/CDD
     if (avgTemp < 18) {
       HDD = TEMPERATURE_THRESHOLD.sub(avgTemp);
       settlementPrice = HDD.mul(3000000000000000);

@@ -1,4 +1,4 @@
-const MyContract = artifacts.require("MyContract");
+const Oracle = artifacts.require("Oracle");
 const LinkTokenInterface = artifacts.require("LinkTokenInterface");
 
 const linkTokenAddress = "0x20fE562d797A42Dcb3399062AE9546cd06f63280";
@@ -8,15 +8,11 @@ const perCallLink = web3.utils.toWei("0.1");
 const depositedLink = web3.utils.toWei("1");
 
 module.exports = async function(deployer) {
-  await deployer.deploy(
-    MyContract,
-    linkTokenAddress,
-    oracle,
-    jobId,
-    perCallLink
-  );
-  const myContract = await MyContract.deployed();
+  await deployer.deploy(Oracle, linkTokenAddress, oracle, jobId, perCallLink);
+  const deployedOracle = await Oracle.deployed();
+
+  console.log("Oracle deployed at ", deployedOracle.address);
 
   const linkToken = await LinkTokenInterface.at(linkTokenAddress);
-  await linkToken.transfer(myContract.address, depositedLink);
+  await linkToken.transfer(deployedOracle.address, depositedLink);
 };
