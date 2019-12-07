@@ -1,8 +1,9 @@
 const fetch = require("node-fetch");
 const fs = require("fs");
+require("dotenv").config();
 
 fetch(
-  "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=SP&apikey=2ANA026TLTLE03XK"
+  `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=SP&apikey=${process.env.API_KEY}`
 )
   .then(res => res.json())
   .then(data => {
