@@ -14,6 +14,7 @@ contract FuturesFactory is Ownable {
   using SafeMath for int256;
   address private escrowAddress;
   uint256 private futureId;
+  uint256 private orderId;
   address private deployedOracleAddress;
   uint256 private positionAmount;
   uint256 public TEMPERATURE_THRESHOLD;
@@ -25,10 +26,19 @@ contract FuturesFactory is Ownable {
     uint256 price;
     uint256 expiry;
   }
+  
+  struct order {
+    address trader;
+    uint256 qty;
+    uint256 price;
+    uint256 expiry;
+    bool isFilled;
+  }
 
   event idEvent(uint256);
 
   mapping(uint256 => future) futuresList; // futureId => future
+  mapping(uint256 => order) ordersList; // orderId => order
 
   /*
    * @dev Initializes oracle, escrow and positionAmount
@@ -38,18 +48,16 @@ contract FuturesFactory is Ownable {
     deployedOracleAddress = _oracleAddress;
     escrowAddress = address(new Escrow());
     futureId = 1;
+    orderId = 1;
     TEMPERATURE_THRESHOLD = 18;
   }
-
-  /*
-   * @dev Submit order - send margin amount of the first trader
-   * to the smart contract.
-   * @param _qty no. of lots [ex: 5]
-   * @param _price price of one lot (wei) [ex: 0.02 ETH = 20000000000000000]
-   */
-  function submitOrder(uint256 _qty, uint256 _price) public payable {
+  
+  function submitOrder(uint256 _qty, uint256 _price, uint256 _expiry) public payable {
     require(_qty.mul(_price) == msg.value, "Amount paid is incorrect");
     positionAmount = uint256(msg.value);
+    order memory newOrder = order(msg.sender, _qty, _price, _expiry, false);
+    ordersList[orderId] = newOrder;
+    orderId = orderId.add(1);
   }
 
   /*
@@ -81,6 +89,15 @@ contract FuturesFactory is Ownable {
     );
 
     futuresList[futureId] = newFuture;
+    uint256 prevOrderId = orderId.sub(1);
+    order memory tempOrder = order(
+      ordersList[prevOrderId].trader,
+      ordersList[prevOrderId].qty,
+      ordersList[prevOrderId].price,
+      ordersList[prevOrderId].expiry,
+      true
+    );
+    ordersList[prevOrderId] = tempOrder;
     emit idEvent(futureId);
     futureId = futureId.add(1);
   }
@@ -128,6 +145,10 @@ contract FuturesFactory is Ownable {
     return futureId;
   }
 
+  function getLatestOrderID() public view returns (uint256) {
+    return orderId;
+  }
+
   function getFutureDetails(uint256 _futureId) public view returns (
     address,
     address,
@@ -142,6 +163,23 @@ contract FuturesFactory is Ownable {
       existingFuture.qty,
       existingFuture.price,
       existingFuture.expiry
+    );
+  }
+
+  function getOrderDetails(uint256 _orderId) public view returns (
+    address,
+    uint256,
+    uint256,
+    uint256,
+    bool
+  ) {
+    order memory existingOrder = ordersList[_orderId];
+    return (
+      existingOrder.trader,
+      existingOrder.qty,
+      existingOrder.price,
+      existingOrder.expiry,
+      existingOrder.isFilled
     );
   }
 
