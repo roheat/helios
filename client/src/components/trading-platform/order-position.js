@@ -15,7 +15,7 @@ export default class OrderPosition extends Component {
               <input
                 className="form-control"
                 type="text"
-                readonly
+                readOnly
                 value="20 ETH"
               />
             </div>
@@ -32,7 +32,7 @@ export default class OrderPosition extends Component {
           <div className="row">
             <div className="col-12 col-md-6">
               <form>
-                <div class="form-group text-center ">
+                <div className="form-group text-center ">
                   <input
                     className="form-control"
                     type="number"
@@ -54,7 +54,7 @@ export default class OrderPosition extends Component {
             </div>
             <div className="col-12 col-md-6">
               <form>
-                <div class="form-group text-center ">
+                <div className="form-group text-center ">
                   <input
                     className="form-control"
                     type="number"

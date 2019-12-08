@@ -18,7 +18,9 @@ contract FuturesFactory is Ownable {
   address private deployedOracleAddress;
   uint256 private positionAmount;
   uint256 public TEMPERATURE_THRESHOLD;
-
+  
+  enum Position { LONG, SHORT }
+  
   struct future {
     address long;
     address short;
@@ -29,6 +31,7 @@ contract FuturesFactory is Ownable {
   
   struct order {
     address trader;
+    Position position;
     uint256 qty;
     uint256 price;
     uint256 expiry;
@@ -52,10 +55,15 @@ contract FuturesFactory is Ownable {
     TEMPERATURE_THRESHOLD = 18;
   }
   
-  function submitOrder(uint256 _qty, uint256 _price, uint256 _expiry) public payable {
+  function submitOrder(
+    Position _position,
+    uint256 _qty,
+    uint256 _price,
+    uint256 _expiry
+  ) public payable {
     require(_qty.mul(_price) == msg.value, "Amount paid is incorrect");
     positionAmount = uint256(msg.value);
-    order memory newOrder = order(msg.sender, _qty, _price, _expiry, false);
+    order memory newOrder = order(msg.sender, _position, _qty, _price, _expiry, false);
     ordersList[orderId] = newOrder;
     orderId = orderId.add(1);
   }
@@ -92,6 +100,7 @@ contract FuturesFactory is Ownable {
     uint256 prevOrderId = orderId.sub(1);
     order memory tempOrder = order(
       ordersList[prevOrderId].trader,
+      ordersList[prevOrderId].position,
       ordersList[prevOrderId].qty,
       ordersList[prevOrderId].price,
       ordersList[prevOrderId].expiry,
@@ -144,7 +153,7 @@ contract FuturesFactory is Ownable {
   function getLatestFutureID() public view returns (uint256) {
     return futureId;
   }
-
+  
   function getLatestOrderID() public view returns (uint256) {
     return orderId;
   }
@@ -165,9 +174,10 @@ contract FuturesFactory is Ownable {
       existingFuture.expiry
     );
   }
-
+  
   function getOrderDetails(uint256 _orderId) public view returns (
     address,
+    Position,
     uint256,
     uint256,
     uint256,
@@ -176,6 +186,7 @@ contract FuturesFactory is Ownable {
     order memory existingOrder = ordersList[_orderId];
     return (
       existingOrder.trader,
+      existingOrder.position,
       existingOrder.qty,
       existingOrder.price,
       existingOrder.expiry,

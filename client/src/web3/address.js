@@ -1,0 +1,2 @@
+export const CONTRACT_ADDRESS_ROPSTEN =
+  "0x115b35c4c49cf3a4a519d4afab7c80785196fde1";
