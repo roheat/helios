@@ -18,9 +18,9 @@ contract FuturesFactory is Ownable {
   address private deployedOracleAddress;
   uint256 private positionAmount;
   uint256 public TEMPERATURE_THRESHOLD;
-  
+
   enum Position { LONG, SHORT }
-  
+
   struct future {
     address long;
     address short;
@@ -28,7 +28,7 @@ contract FuturesFactory is Ownable {
     uint256 price;
     uint256 expiry;
   }
-  
+
   struct order {
     address trader;
     Position position;
@@ -54,7 +54,7 @@ contract FuturesFactory is Ownable {
     orderId = 1;
     TEMPERATURE_THRESHOLD = 18;
   }
-  
+
   function submitOrder(
     Position _position,
     uint256 _qty,
@@ -153,7 +153,7 @@ contract FuturesFactory is Ownable {
   function getLatestFutureID() public view returns (uint256) {
     return futureId;
   }
-  
+
   function getLatestOrderID() public view returns (uint256) {
     return orderId;
   }
@@ -174,7 +174,7 @@ contract FuturesFactory is Ownable {
       existingFuture.expiry
     );
   }
-  
+
   function getOrderDetails(uint256 _orderId) public view returns (
     address,
     Position,

@@ -3,6 +3,7 @@ import web3 from "../../web3/web3";
 import { CONTRACT_ABI } from "../../web3/abi";
 import { CONTRACT_ADDRESS_ROPSTEN } from "../../web3/address";
 
+const ORDER_TYPE = ["BUY", "SELL"];
 export default class OpenOrders extends Component {
   constructor() {
     super();
@@ -11,7 +12,7 @@ export default class OpenOrders extends Component {
       account: null,
       loading: false,
       errorMessage: "",
-      ordersList: []
+      ordersList: null
     };
   }
 
@@ -48,8 +49,8 @@ export default class OpenOrders extends Component {
       return [
         order[0],
         order[1],
-        web3.utils.fromWei(order[2], "ether"),
-        order[3],
+        order[2],
+        web3.utils.fromWei(order[3], "ether"),
         order[4]
       ];
     });
@@ -58,6 +59,17 @@ export default class OpenOrders extends Component {
   }
 
   render() {
+    const { ordersList } = this.state;
+    if (!ordersList)
+      return (
+        <div className="card text-center" style={{ minHeight: "400px" }}>
+          <div className="card-body">
+            <div className="spinner-border mt-5" role="status">
+              <span className="sr-only">Loading...</span>
+            </div>
+          </div>
+        </div>
+      );
     return (
       <div className="card" style={{ minHeight: "400px" }}>
         <div className="card-body">
@@ -66,40 +78,33 @@ export default class OpenOrders extends Component {
             Submitted orders that are yet to be filled.
           </p>
 
-          <table className="table table-info table-hover">
+          <table className="table table-hover">
             <thead className="thead-dark">
               <tr>
                 <th>ADDRESS</th>
                 <th>SIDE</th>
-                <th>QUANTITY</th>
+                <th>QTY</th>
                 <th>PRICE</th>
                 <th>EXPIRY</th>
                 <th>ACTION</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td className="align-middle">
-                  0xca35b7d915458ef540ade6068dfe2f44e8fa733c
-                </td>
-                <td className="align-middle">SELL/SHORT</td>
-                <td className="align-middle">5</td>
-                <td className="align-middle">0.2 ETH</td>
-                <td className="align-middle">2019-12-31</td>
-                <td className="align-middle">
-                  <button className="btn btn-primary">FILL ORDER</button>
-                </td>
-              </tr>
-              <tr>
-                <td>0xca35b7d915458ef540ade6068dfe2f44e8fa733c</td>
-                <td>BUY/LONG</td>
-                <td>5</td>
-                <td>0.2 ETH</td>
-                <td>2019-12-31</td>
-                <td>
-                  <button className="btn btn-primary">FILL ORDER</button>
-                </td>
-              </tr>
+              {ordersList.map(
+                (order, index) =>
+                  !order[4] && (
+                    <tr key={index}>
+                      <td className="align-middle">{order[0]}</td>
+                      <td className="align-middle">{ORDER_TYPE[order[1]]}</td>
+                      <td className="align-middle">{order[2]}</td>
+                      <td className="align-middle">{order[3]} ETH</td>
+                      <td className="align-middle">2019-12-31</td>
+                      <td className="align-middle">
+                        <button className="btn btn-primary">FILL ORDER</button>
+                      </td>
+                    </tr>
+                  )
+              )}
             </tbody>
           </table>
         </div>
