@@ -3,7 +3,7 @@ import React, { Component } from "react";
 export default class OpenOrders extends Component {
   render() {
     return (
-      <div className="card" style={{ minHeight: "300px" }}>
+      <div className="card" style={{ minHeight: "400px" }}>
         <div className="card-body">
           <h5 className="card-title">Open Orders</h5>
           <p className="card-text">

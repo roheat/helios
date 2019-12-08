@@ -11,15 +11,15 @@ export default class OrderPosition extends Component {
           </p>
           <div className="row justify-content-center my-3">
             <div className="col-12 col-md-3">
-              <label className="text-left">Lot Size</label>
+              <label className="text-left">Price</label>
               <input
                 className="form-control"
                 type="text"
                 readonly
-                placeholder="10"
+                value="20 ETH"
               />
             </div>
-            <div className="col-12 col-md-3">
+            {/* <div className="col-12 col-md-3">
               <label className="text-left">Price per lot</label>
               <input
                 className="form-control"
@@ -27,7 +27,7 @@ export default class OrderPosition extends Component {
                 readonly
                 placeholder="0.2 ETH"
               />
-            </div>
+            </div> */}
           </div>
           <div className="row">
             <div className="col-12 col-md-6">
@@ -36,8 +36,16 @@ export default class OrderPosition extends Component {
                   <input
                     className="form-control"
                     type="number"
-                    placeholder="Qty"
+                    placeholder="Order Qty"
                   />
+                  <div className="d-flex justify-content-between mt-2">
+                    <p>Margin:</p>
+                    <p>1%</p>
+                  </div>
+                  <div className="d-flex justify-content-between">
+                    <p>Order Value:</p>
+                    <p>0.2 ETH</p>
+                  </div>
                   <button type="submit" className="btn btn-success mt-3">
                     BUY/LONG
                   </button>
@@ -50,8 +58,16 @@ export default class OrderPosition extends Component {
                   <input
                     className="form-control"
                     type="number"
-                    placeholder="Qty"
+                    placeholder="Order Qty"
                   />
+                  <div className="d-flex justify-content-between mt-2">
+                    <p>Margin:</p>
+                    <p>1%</p>
+                  </div>
+                  <div className="d-flex justify-content-between">
+                    <p>Order Value:</p>
+                    <p>0.2 ETH</p>
+                  </div>
                   <button type="submit" className="btn btn-danger mt-3">
                     SELL/SHORT
                   </button>
