@@ -1,36 +1,28 @@
 import React, { Component } from "react";
 import web3 from "../../web3/web3";
-import { CONTRACT_ABI } from "../../web3/abi";
-import { CONTRACT_ADDRESS_ROPSTEN } from "../../web3/address";
+import { CONTRACT_ABI, ORACLE_ABI } from "../../web3/abi";
+import {
+  CONTRACT_ADDRESS_ROPSTEN,
+  ORACLE_ADDRESS_ROPSTEN
+} from "../../web3/address";
+import Modal from "react-bootstrap/Modal";
 
 export default class OrderBook extends Component {
   constructor() {
     super();
 
     this.state = {
-      account: null,
       loading: false,
       errorMessage: "",
-      futuresList: null
+      futuresList: null,
+      avgTemp: "",
+      show: false
     };
   }
 
   componentDidMount() {
-    this.initialize();
     this.getFuturesList();
-  }
-
-  async initialize() {
-    try {
-      const [account] = await window.ethereum.enable();
-      this.setState({ account });
-    } catch (error) {
-      console.log(error);
-      this.setState({
-        errorMessage:
-          "Error connectin to Metamask! Please try reloading the page..."
-      });
-    }
+    this.getAverageTemperature();
   }
 
   async getFuturesList() {
@@ -58,8 +50,36 @@ export default class OrderBook extends Component {
     console.log("filled orders", processedFuturesList);
   }
 
+  async getAverageTemperature() {
+    const contract = new web3.eth.Contract(ORACLE_ABI, ORACLE_ADDRESS_ROPSTEN);
+
+    const avgTemp = await contract.methods.avgTemp().call();
+    this.setState({ avgTemp });
+  }
+
+  async squareOff(id) {
+    const { account } = this.props;
+    const contract = new web3.eth.Contract(
+      CONTRACT_ABI.abi,
+      CONTRACT_ADDRESS_ROPSTEN
+    );
+
+    await contract.methods.squareOffOrder(id).send({
+      from: account,
+      gas: 3000000
+    });
+  }
+
+  showModal = () => {
+    this.setState({ show: true });
+  };
+
+  closeModal = () => {
+    this.setState({ show: false });
+  };
+
   render() {
-    const { futuresList } = this.state;
+    const { futuresList, show, avgTemp } = this.state;
     if (!futuresList)
       return (
         <div className="card text-center" style={{ minHeight: "400px" }}>
@@ -100,7 +120,43 @@ export default class OrderBook extends Component {
                   <td className="align-middle">{future[2] * future[3]} ETH</td>
                   <td className="align-middle">2019-12-31</td>
                   <td className="align-middle">
-                    <button className="btn btn-success">SQUARE OFF</button>
+                    <button
+                      onClick={() => this.squareOff(index + 1)}
+                      className="btn btn-success"
+                    >
+                      SQUARE OFF
+                    </button>
+                    <button
+                      className="btn btn-warning ml-2"
+                      onClick={this.showModal}
+                    >
+                      Info
+                    </button>
+                    <Modal
+                      size="lg"
+                      aria-labelledby="contained-modal-title-vcenter"
+                      centered
+                      show={show}
+                      onHide={this.closeModal}
+                    >
+                      <Modal.Body>
+                        <h3 className="mt-5 text-center">
+                          Average Temperature: {avgTemp}°C
+                        </h3>
+                        <h4 className="my-3 text-center">
+                          Settlement Price: (18 - {avgTemp}) x 0.003 ={" "}
+                          {(18 - avgTemp) * 0.003} ETH
+                        </h4>
+                      </Modal.Body>
+                      <Modal.Footer>
+                        <button
+                          className="btn btn-dark"
+                          onClick={this.closeModal}
+                        >
+                          Close
+                        </button>
+                      </Modal.Footer>
+                    </Modal>
                   </td>
                 </tr>
               ))}

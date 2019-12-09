@@ -9,7 +9,6 @@ export default class OpenOrders extends Component {
     super();
 
     this.state = {
-      account: null,
       loading: false,
       errorMessage: "",
       ordersList: null
@@ -17,20 +16,7 @@ export default class OpenOrders extends Component {
   }
 
   componentDidMount() {
-    this.initialize();
     this.getOrdersList();
-  }
-  async initialize() {
-    try {
-      const [account] = await window.ethereum.enable();
-      this.setState({ account });
-    } catch (error) {
-      console.log(error);
-      this.setState({
-        errorMessage:
-          "Error connectin to Metamask! Please try reloading the page..."
-      });
-    }
   }
 
   async getOrdersList() {
@@ -51,12 +37,44 @@ export default class OpenOrders extends Component {
         order[1],
         order[2],
         web3.utils.fromWei(order[3], "ether"),
-        order[4]
+        order[4],
+        order[5]
       ];
     });
     this.setState({ ordersList: processedOrdersList });
     console.log("open orders", processedOrdersList);
   }
+
+  fillOrder = async order => {
+    const trader = order[0];
+    const position = order[1];
+    const qty = order[2];
+    const price = web3.utils.toWei(order[3], "ether");
+    const expiry = order[4];
+
+    const { account } = this.props;
+    const contract = new web3.eth.Contract(
+      CONTRACT_ABI.abi,
+      CONTRACT_ADDRESS_ROPSTEN
+    );
+    if (ORDER_TYPE[position] === "BUY") {
+      await contract.methods
+        .fillOrder(trader, account, qty, price, expiry)
+        .send({
+          value: qty * price,
+          from: account,
+          gas: 3000000
+        });
+    } else if (ORDER_TYPE[position] === "SELL") {
+      await contract.methods
+        .fillOrder(account, trader, qty, price, expiry)
+        .send({
+          value: qty * price,
+          from: account,
+          gas: 3000000
+        });
+    }
+  };
 
   render() {
     const { ordersList } = this.state;
@@ -92,7 +110,7 @@ export default class OpenOrders extends Component {
             <tbody>
               {ordersList.map(
                 (order, index) =>
-                  !order[4] && (
+                  !order[5] && (
                     <tr key={index}>
                       <td className="align-middle">{order[0]}</td>
                       <td className="align-middle">{ORDER_TYPE[order[1]]}</td>
@@ -100,7 +118,12 @@ export default class OpenOrders extends Component {
                       <td className="align-middle">{order[3]} ETH</td>
                       <td className="align-middle">2019-12-31</td>
                       <td className="align-middle">
-                        <button className="btn btn-primary">FILL ORDER</button>
+                        <button
+                          onClick={() => this.fillOrder(order)}
+                          className="btn btn-primary"
+                        >
+                          FILL ORDER
+                        </button>
                       </td>
                     </tr>
                   )

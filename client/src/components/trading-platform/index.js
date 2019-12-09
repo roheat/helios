@@ -7,7 +7,27 @@ import OrderBook from "./order-book";
 import OrderPosition from "./order-position";
 
 export default class TradingPlatform extends Component {
+  constructor() {
+    super();
+    this.state = { account: null };
+  }
+  componentDidMount() {
+    this.initialize();
+  }
+  async initialize() {
+    try {
+      const [account] = await window.ethereum.enable();
+      this.setState({ account });
+    } catch (error) {
+      console.log(error);
+      this.setState({
+        errorMessage:
+          "Error connectin to Metamask! Please try reloading the page..."
+      });
+    }
+  }
   render() {
+    const { account } = this.state;
     return (
       <div className="container-fluid">
         <Navbar />
@@ -21,15 +41,15 @@ export default class TradingPlatform extends Component {
         </div>
         <div className="row my-3">
           <div className="col-12 col-md-8">
-            <OpenOrders />
+            <OpenOrders account={account} />
           </div>
           <div className="col-12 col-md-4">
-            <OrderPosition />
+            <OrderPosition account={account} />
           </div>
         </div>
         <div className="row my-3">
           <div className="col-12 col-md-12">
-            <OrderBook />
+            <OrderBook account={account} />
           </div>
         </div>
       </div>

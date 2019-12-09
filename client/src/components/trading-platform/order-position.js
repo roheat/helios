@@ -1,6 +1,57 @@
 import React, { Component } from "react";
+import web3 from "../../web3/web3";
+import { CONTRACT_ABI } from "../../web3/abi";
+import { CONTRACT_ADDRESS_ROPSTEN } from "../../web3/address";
 
 export default class OrderPosition extends Component {
+  constructor() {
+    super();
+
+    this.state = {
+      buyQty: "",
+      sellQty: ""
+    };
+  }
+
+  onBuy = async event => {
+    event.preventDefault();
+    const { buyQty } = this.state;
+    const { account } = this.props;
+    const priceInWei = web3.utils.toWei("0.2", "ether");
+    const expiry = Date.parse("December 31, 2019");
+    console.log(expiry);
+
+    const contract = new web3.eth.Contract(
+      CONTRACT_ABI.abi,
+      CONTRACT_ADDRESS_ROPSTEN
+    );
+
+    await contract.methods.submitOrder(0, buyQty, priceInWei, expiry).send({
+      value: buyQty * priceInWei,
+      from: account,
+      gas: 3000000
+    });
+  };
+
+  onSell = async event => {
+    event.preventDefault();
+    const { sellQty, account } = this.props;
+
+    const priceInWei = web3.utils.toWei("0.2", "ether");
+    const expiry = Date.parse("December 31, 2019");
+    console.log(expiry);
+
+    const contract = new web3.eth.Contract(
+      CONTRACT_ABI.abi,
+      CONTRACT_ADDRESS_ROPSTEN
+    );
+
+    await contract.methods.submitOrder(1, sellQty, priceInWei, expiry).send({
+      value: sellQty * priceInWei,
+      from: account,
+      gas: 3000000
+    });
+  };
   render() {
     return (
       <div className="card">
@@ -19,15 +70,6 @@ export default class OrderPosition extends Component {
                 value="20 ETH"
               />
             </div>
-            {/* <div className="col-12 col-md-3">
-              <label className="text-left">Price per lot</label>
-              <input
-                className="form-control"
-                type="text"
-                readonly
-                placeholder="0.2 ETH"
-              />
-            </div> */}
           </div>
           <div className="row">
             <div className="col-12 col-md-6">
@@ -37,6 +79,8 @@ export default class OrderPosition extends Component {
                     className="form-control"
                     type="number"
                     placeholder="Order Qty"
+                    value={this.state.buyQty}
+                    onChange={e => this.setState({ buyQty: e.target.value })}
                   />
                   <div className="d-flex justify-content-between mt-2">
                     <p>Margin:</p>
@@ -44,21 +88,27 @@ export default class OrderPosition extends Component {
                   </div>
                   <div className="d-flex justify-content-between">
                     <p>Order Value:</p>
-                    <p>0.2 ETH</p>
+                    <p>{this.state.buyQty * 0.2} ETH</p>
                   </div>
-                  <button type="submit" className="btn btn-success mt-3">
+                  <button
+                    type="submit"
+                    onClick={this.onBuy}
+                    className="btn btn-success mt-3"
+                  >
                     BUY/LONG
                   </button>
                 </div>
               </form>
             </div>
             <div className="col-12 col-md-6">
-              <form>
+              <form onSubmit={this.onSell}>
                 <div className="form-group text-center ">
                   <input
                     className="form-control"
                     type="number"
                     placeholder="Order Qty"
+                    value={this.state.sellQty}
+                    onChange={e => this.setState({ sellQty: e.target.value })}
                   />
                   <div className="d-flex justify-content-between mt-2">
                     <p>Margin:</p>
@@ -66,9 +116,13 @@ export default class OrderPosition extends Component {
                   </div>
                   <div className="d-flex justify-content-between">
                     <p>Order Value:</p>
-                    <p>0.2 ETH</p>
+                    <p>{this.state.sellQty * 0.2} ETH</p>
                   </div>
-                  <button type="submit" className="btn btn-danger mt-3">
+                  <button
+                    type="submit"
+                    onClick={this.onSell}
+                    className="btn btn-danger mt-3"
+                  >
                     SELL/SHORT
                   </button>
                 </div>
