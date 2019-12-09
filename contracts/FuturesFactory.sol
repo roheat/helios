@@ -204,10 +204,24 @@ contract FuturesFactory is Ownable {
     return true;
   }
 
+  /*
+   * @dev Average temperature - Calculated by taking
+   * mean of avg temperature values from World Weather Online
+   * and Aeris Weather APIs
+   */
   function _getAvgTemperature() public view returns (int256) {
     require(deployedOracleAddress != address(0), "Weather oracle address not set");
-    require(IOracle(deployedOracleAddress).avgTempReceived() == true, "Avg temperature not recieved yet");
-    int256 avgTemp = IOracle(deployedOracleAddress).avgTemp();
+    require(
+      IOracle(deployedOracleAddress).avgTempReceived_WWO() == true,
+      "Avg temperature not recieved yet from WWO"
+    );
+    require(
+      IOracle(deployedOracleAddress).avgTempReceived_AERIS() == true,
+      "Avg temperature not recieved yet from Aeris"
+    );
+    int256 avgTemp_WWO = IOracle(deployedOracleAddress).avgTemp_WWO();
+    int256 avgTemp_AERIS = IOracle(deployedOracleAddress).avgTemp_AERIS();
+    int256 avgTemp = (avgTemp_WWO + avgTemp_AERIS) / 2;
     return avgTemp;
   }
 
