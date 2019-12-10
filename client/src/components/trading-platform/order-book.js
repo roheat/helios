@@ -1,10 +1,7 @@
 import React, { Component } from "react";
 import web3 from "../../web3/web3";
-import { CONTRACT_ABI, ORACLE_ABI } from "../../web3/abi";
-import {
-  CONTRACT_ADDRESS_ROPSTEN,
-  ORACLE_ADDRESS_ROPSTEN
-} from "../../web3/address";
+import { CONTRACT_ABI } from "../../web3/abi";
+import { CONTRACT_ADDRESS_ROPSTEN } from "../../web3/address";
 import Modal from "react-bootstrap/Modal";
 
 export default class OrderBook extends Component {
@@ -51,9 +48,12 @@ export default class OrderBook extends Component {
   }
 
   async getAverageTemperature() {
-    const contract = new web3.eth.Contract(ORACLE_ABI, ORACLE_ADDRESS_ROPSTEN);
+    const contract = new web3.eth.Contract(
+      CONTRACT_ABI.abi,
+      CONTRACT_ADDRESS_ROPSTEN
+    );
 
-    const avgTemp = await contract.methods.avgTemp().call();
+    const avgTemp = await contract.methods._getAvgTemperature().call();
     this.setState({ avgTemp });
   }
 

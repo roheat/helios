@@ -16,38 +16,6 @@ export const MIN_ABI = [
   }
 ];
 
-// Oracle ABI
-export const ORACLE_ABI = [
-  {
-    constant: true,
-    inputs: [],
-    name: "avgTemp",
-    outputs: [
-      {
-        name: "",
-        type: "int256"
-      }
-    ],
-    payable: false,
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    constant: true,
-    inputs: [],
-    name: "avgTempReceived",
-    outputs: [
-      {
-        name: "",
-        type: "bool"
-      }
-    ],
-    payable: false,
-    stateMutability: "view",
-    type: "function"
-  }
-];
-
 // Contract ABI
 export const CONTRACT_ABI = {
   contractName: "FuturesFactory",
