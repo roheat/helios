@@ -14,6 +14,7 @@ export default class OrderBook extends Component {
       futuresList: null,
       avgTemp: "",
       show: false
+      // squareOffLoading: true
     };
   }
 
@@ -63,11 +64,13 @@ export default class OrderBook extends Component {
       CONTRACT_ABI.abi,
       CONTRACT_ADDRESS_ROPSTEN
     );
+    this.setState({ [id]: true });
 
     await contract.methods.squareOffOrder(id).send({
       from: account,
       gas: 3000000
     });
+    this.setState({ [id]: false });
   }
 
   showModal = () => {
@@ -104,14 +107,17 @@ export default class OrderBook extends Component {
                 <th>SELL/SHORT ADDRESS</th>
                 <th>QTY</th>
                 <th>PRICE</th>
-                <th>TOTAL AMOUNT</th>
+                <th>AMOUNT</th>
                 <th>EXPIRY</th>
                 <th>ACTION</th>
               </tr>
             </thead>
             <tbody>
               {futuresList.map((future, index) => (
-                <tr key={index} style={{ fontSize: "18px" }}>
+                <tr
+                  key={index}
+                  style={{ fontSize: "18px", borderBottom: "0px solid black" }}
+                >
                   <td className="align-middle">{index + 1}</td>
                   <td className="align-middle">{future[0]}</td>
                   <td className="align-middle">{future[1]}</td>
@@ -119,11 +125,28 @@ export default class OrderBook extends Component {
                   <td className="align-middle">{future[3]} ETH</td>
                   <td className="align-middle">{future[2] * future[3]} ETH</td>
                   <td className="align-middle">2019-12-11</td>
-                  <td className="align-middle">
+                  <td
+                    className="align-middle d-flex"
+                    style={{ width: "300px" }}
+                  >
                     <button
                       onClick={() => this.squareOff(index + 1)}
-                      className="btn btn-success"
+                      className="btn btn-success d-flex"
+                      disabled={this.state[index + 1]}
                     >
+                      {this.state[index + 1] && (
+                        <div
+                          className="spinner-border mr-2"
+                          role="status"
+                          style={{
+                            height: "25px",
+                            width: "25px",
+                            fontSize: "10px"
+                          }}
+                        >
+                          <span className="sr-only">Loading...</span>
+                        </div>
+                      )}
                       SQUARE OFF
                     </button>
                     <button

@@ -1,9 +1,10 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 export default function Navbar() {
   return (
     <nav className="navbar navbar-expand-lg navbar-light">
-      <a className="navbar-brand d-flex" href="/">
+      <Link className="navbar-brand d-flex" to="/">
         <svg width="32" height="32" xmlns="http://www.w3.org/2000/svg">
           <title>Helios</title>
           <defs>
@@ -60,14 +61,11 @@ export default function Navbar() {
           </g>
         </svg>
         <h4 className="ml-2">Helios Trading Platform</h4>
-      </a>
+      </Link>
       <div className="collapse navbar-collapse">
-        <button
-          className="btn btn-outline-success my-2 my-sm-0 ml-auto"
-          type="submit"
-        >
+        <Link className="btn btn-outline-primary my-2 my-sm-0 ml-auto" to="/">
           How it works
-        </button>
+        </Link>
       </div>
     </nav>
   );

@@ -45,7 +45,7 @@ export default class OpenOrders extends Component {
     console.log("open orders", processedOrdersList);
   }
 
-  fillOrder = async order => {
+  fillOrder = async (order, orderId) => {
     const trader = order[0];
     const position = order[1];
     const qty = order[2];
@@ -57,6 +57,7 @@ export default class OpenOrders extends Component {
       CONTRACT_ABI.abi,
       CONTRACT_ADDRESS_ROPSTEN
     );
+    this.setState({ [orderId]: true });
     if (ORDER_TYPE[position] === "BUY") {
       await contract.methods
         .fillOrder(trader, account, qty, price, expiry)
@@ -74,6 +75,7 @@ export default class OpenOrders extends Component {
           gas: 3000000
         });
     }
+    this.setState({ [orderId]: false });
   };
 
   render() {
@@ -116,7 +118,12 @@ export default class OpenOrders extends Component {
               {ordersList.map(
                 (order, index) =>
                   !order[5] && (
-                    <tr key={index} style={{ fontSize: "18px" }}>
+                    <tr
+                      key={index}
+                      style={{
+                        fontSize: "18px"
+                      }}
+                    >
                       <td className="align-middle">{order[0]}</td>
                       <td className="align-middle">{ORDER_TYPE[order[1]]}</td>
                       <td className="align-middle">{order[2]}</td>
@@ -124,9 +131,23 @@ export default class OpenOrders extends Component {
                       <td className="align-middle">2019-12-11</td>
                       <td className="align-middle">
                         <button
-                          onClick={() => this.fillOrder(order)}
-                          className="btn btn-primary"
+                          onClick={() => this.fillOrder(order, index + 1)}
+                          className="btn btn-primary d-flex"
+                          disabled={this.state[index + 1]}
                         >
+                          {this.state[index + 1] && (
+                            <div
+                              className="spinner-border mr-2"
+                              role="status"
+                              style={{
+                                height: "25px",
+                                width: "25px",
+                                fontSize: "10px"
+                              }}
+                            >
+                              <span className="sr-only">Loading...</span>
+                            </div>
+                          )}
                           FILL ORDER
                         </button>
                       </td>

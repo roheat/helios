@@ -9,7 +9,9 @@ export default class OrderPosition extends Component {
 
     this.state = {
       buyQty: "",
-      sellQty: ""
+      sellQty: "",
+      buyLoading: false,
+      sellLoading: false
     };
   }
 
@@ -25,33 +27,36 @@ export default class OrderPosition extends Component {
       CONTRACT_ABI.abi,
       CONTRACT_ADDRESS_ROPSTEN
     );
-
+    this.setState({ buyLoading: true });
     await contract.methods.submitOrder(0, buyQty, priceInWei, expiry).send({
       value: buyQty * priceInWei,
       from: account,
       gas: 3000000
     });
+    this.setState({ buyLoading: false, buyQty: "" });
   };
 
   onSell = async event => {
     event.preventDefault();
-    const { sellQty, account } = this.props;
-
+    const { sellQty } = this.state;
+    const { account } = this.props;
     const priceInWei = web3.utils.toWei("0.2", "ether");
     const expiry = Date.parse("December 11, 2019");
-
     const contract = new web3.eth.Contract(
       CONTRACT_ABI.abi,
       CONTRACT_ADDRESS_ROPSTEN
     );
 
+    this.setState({ sellLoading: true });
     await contract.methods.submitOrder(1, sellQty, priceInWei, expiry).send({
       value: sellQty * priceInWei,
       from: account,
       gas: 3000000
     });
+    this.setState({ sellLoading: false, sellQty: "" });
   };
   render() {
+    const { buyLoading, sellLoading } = this.state;
     return (
       <div className="card">
         <div className="card-body">
@@ -92,8 +97,22 @@ export default class OrderPosition extends Component {
                   <button
                     type="submit"
                     onClick={this.onBuy}
-                    className="btn btn-success mt-3 px-5"
+                    className="btn btn-success mt-3 px-5 d-flex"
+                    disabled={buyLoading}
                   >
+                    {buyLoading && (
+                      <div
+                        className="spinner-border mr-2"
+                        role="status"
+                        style={{
+                          height: "25px",
+                          width: "25px",
+                          fontSize: "10px"
+                        }}
+                      >
+                        <span className="sr-only">Loading...</span>
+                      </div>
+                    )}
                     BUY/LONG
                   </button>
                 </div>
@@ -120,8 +139,22 @@ export default class OrderPosition extends Component {
                   <button
                     type="submit"
                     onClick={this.onSell}
-                    className="btn btn-danger mt-3 px-5"
+                    className="btn btn-danger mt-3 px-5 d-flex"
+                    disabled={sellLoading}
                   >
+                    {sellLoading && (
+                      <div
+                        className="spinner-border mr-2"
+                        role="status"
+                        style={{
+                          height: "25px",
+                          width: "25px",
+                          fontSize: "10px"
+                        }}
+                      >
+                        <span className="sr-only">Loading...</span>
+                      </div>
+                    )}
                     SELL/SHORT
                   </button>
                 </div>
