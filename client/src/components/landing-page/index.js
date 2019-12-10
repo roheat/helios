@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from 'react-router-dom';
 import "./styles.css";
 
 export default class LandingPage extends Component {
@@ -74,7 +75,7 @@ export default class LandingPage extends Component {
 	                        <p className="hero-paragraph">Helios is a Weather Futures Trading Platform built on top of the Ethereum blockchain.</p>
 							<div className="hero-form field field-grouped">
 								<div className="control">
-									<a className="button button-primary button-block" href="/">Get Started</a>
+									<Link className="button button-primary button-block" to="/platform">Get Started</Link>
 								</div>
 							</div>
 						</div>
@@ -266,7 +267,7 @@ export default class LandingPage extends Component {
                               <h1 className="mt-2" style={{position: "absolute", marginLeft: "0.65em"}}>2</h1>
                                     </div>
                                     <h4 className="feature-title mt-3 mb-8">Fill Order</h4>
-                                    <p className="text-sm">Once you place an order, it can be filled by another trader. The long and short trade amounts are then sent to an Escrow Smart Contract.</p>
+                                    <p className="text-sm">Once you place an order, it can be filled by another trader. The long and short trade amounts are then locked into an Escrow Smart Contract.</p>
                                 </div>
                             </div>
 							<div className="feature text-center is-revealing">
@@ -309,7 +310,7 @@ export default class LandingPage extends Component {
                             <p className="section-paragraph">Click the button below to visit the trading platform!</p>
                         </div>
                         <div className="row justify-content-center">
-                            <a className="button button-primary button-block button-shadow" href="/">Get Started</a>
+                            <Link className="button button-primary button-block button-shadow" to="/platform">Get Started</Link>
                         </div>
                     </div>
                 </div>

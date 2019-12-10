@@ -111,14 +111,14 @@ export default class OrderBook extends Component {
             </thead>
             <tbody>
               {futuresList.map((future, index) => (
-                <tr key={index}>
+                <tr key={index} style={{ fontSize: "18px" }}>
                   <td className="align-middle">{index + 1}</td>
                   <td className="align-middle">{future[0]}</td>
                   <td className="align-middle">{future[1]}</td>
                   <td className="align-middle">{future[2]}</td>
                   <td className="align-middle">{future[3]} ETH</td>
                   <td className="align-middle">{future[2] * future[3]} ETH</td>
-                  <td className="align-middle">2019-12-31</td>
+                  <td className="align-middle">2019-12-11</td>
                   <td className="align-middle">
                     <button
                       onClick={() => this.squareOff(index + 1)}
@@ -143,6 +143,9 @@ export default class OrderBook extends Component {
                         <h3 className="mt-5 text-center">
                           Average Temperature: {avgTemp}°C
                         </h3>
+                        <h4 className="mt-3 text-center">
+                          HDD = {18 - avgTemp}
+                        </h4>
                         <h4 className="my-3 text-center">
                           Settlement Price: (18 - {avgTemp}) x 0.003 ={" "}
                           {(18 - avgTemp) * 0.003} ETH

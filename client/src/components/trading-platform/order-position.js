@@ -38,8 +38,7 @@ export default class OrderPosition extends Component {
     const { sellQty, account } = this.props;
 
     const priceInWei = web3.utils.toWei("0.2", "ether");
-    const expiry = Date.parse("December 31, 2019");
-    console.log(expiry);
+    const expiry = Date.parse("December 11, 2019");
 
     const contract = new web3.eth.Contract(
       CONTRACT_ABI.abi,
@@ -93,7 +92,7 @@ export default class OrderPosition extends Component {
                   <button
                     type="submit"
                     onClick={this.onBuy}
-                    className="btn btn-success mt-3"
+                    className="btn btn-success mt-3 px-5"
                   >
                     BUY/LONG
                   </button>
@@ -121,7 +120,7 @@ export default class OrderPosition extends Component {
                   <button
                     type="submit"
                     onClick={this.onSell}
-                    className="btn btn-danger mt-3"
+                    className="btn btn-danger mt-3 px-5"
                   >
                     SELL/SHORT
                   </button>

@@ -6,12 +6,16 @@ import OpenOrders from "./open-orders";
 import OrderBook from "./order-book";
 import OrderPosition from "./order-position";
 
+import "./styles.css";
+
 export default class TradingPlatform extends Component {
   constructor() {
     super();
+    this.topRef = React.createRef();
     this.state = { account: null };
   }
   componentDidMount() {
+    window.scrollTo(0, this.topRef.current.offsetTop);
     this.initialize();
   }
   async initialize() {
@@ -29,7 +33,7 @@ export default class TradingPlatform extends Component {
   render() {
     const { account } = this.state;
     return (
-      <div className="container-fluid">
+      <div className="container-fluid" ref={this.topRef}>
         <Navbar />
         <div className="row my-3">
           <div className="col-12 col-md-6">

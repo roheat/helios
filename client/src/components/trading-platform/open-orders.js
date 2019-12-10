@@ -80,7 +80,7 @@ export default class OpenOrders extends Component {
     const { ordersList } = this.state;
     if (!ordersList)
       return (
-        <div className="card text-center" style={{ minHeight: "400px" }}>
+        <div className="card text-center" style={{ minHeight: "500px" }}>
           <div className="card-body">
             <div className="spinner-border mt-5" role="status">
               <span className="sr-only">Loading...</span>
@@ -89,7 +89,7 @@ export default class OpenOrders extends Component {
         </div>
       );
     return (
-      <div className="card" style={{ minHeight: "400px" }}>
+      <div className="card" style={{ minHeight: "500px" }}>
         <div className="card-body">
           <h5 className="card-title">Open Orders</h5>
           <p className="card-text">
@@ -108,15 +108,20 @@ export default class OpenOrders extends Component {
               </tr>
             </thead>
             <tbody>
+              {ordersList.filter(order => order[5] === false).length === 0 && (
+                <tr className="text-center mt-3">
+                  <td colSpan={6}>No open orders found. Please create one.</td>
+                </tr>
+              )}
               {ordersList.map(
                 (order, index) =>
                   !order[5] && (
-                    <tr key={index}>
+                    <tr key={index} style={{ fontSize: "18px" }}>
                       <td className="align-middle">{order[0]}</td>
                       <td className="align-middle">{ORDER_TYPE[order[1]]}</td>
                       <td className="align-middle">{order[2]}</td>
                       <td className="align-middle">{order[3]} ETH</td>
-                      <td className="align-middle">2019-12-31</td>
+                      <td className="align-middle">2019-12-11</td>
                       <td className="align-middle">
                         <button
                           onClick={() => this.fillOrder(order)}
