@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/helios/static/css/main.3f999912.chunk.css",
+    "main.js": "/helios/static/js/main.df5cc134.chunk.js",
+    "main.js.map": "/helios/static/js/main.df5cc134.chunk.js.map",
+    "runtime-main.js": "/helios/static/js/runtime-main.c7b69d41.js",
+    "runtime-main.js.map": "/helios/static/js/runtime-main.c7b69d41.js.map",
+    "static/css/2.17e5ed98.chunk.css": "/helios/static/css/2.17e5ed98.chunk.css",
+    "static/js/2.381c5352.chunk.js": "/helios/static/js/2.381c5352.chunk.js",
+    "static/js/2.381c5352.chunk.js.map": "/helios/static/js/2.381c5352.chunk.js.map",
+    "index.html": "/helios/index.html",
+    "precache-manifest.4b595c00a361c92232245eb22da0b37c.js": "/helios/precache-manifest.4b595c00a361c92232245eb22da0b37c.js",
+    "service-worker.js": "/helios/service-worker.js",
+    "static/css/2.17e5ed98.chunk.css.map": "/helios/static/css/2.17e5ed98.chunk.css.map",
+    "static/css/main.3f999912.chunk.css.map": "/helios/static/css/main.3f999912.chunk.css.map",
+    "static/js/2.381c5352.chunk.js.LICENSE": "/helios/static/js/2.381c5352.chunk.js.LICENSE"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.c7b69d41.js",
+    "static/css/2.17e5ed98.chunk.css",
+    "static/js/2.381c5352.chunk.js",
+    "static/css/main.3f999912.chunk.css",
+    "static/js/main.df5cc134.chunk.js"
+  ]
+}
