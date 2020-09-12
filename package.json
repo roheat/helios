@@ -12,7 +12,7 @@
   "dependencies": {
     "chainlink": "^0.7.5",
     "dotenv": "^8.2.0",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.1",
     "truffle-hdwallet-provider": "^1.0.17"
   }
 }
